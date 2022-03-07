@@ -1,0 +1,16 @@
+.table-container {
+    display: flex;
+    flex-direction: column;
+    width: 732px;
+
+    .symbol-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        border-bottom: 0.5px solid rgb(209, 209, 209);
+    }
+
+    .symbol-container.small {
+        font-size: 11px;
+    }
+}
