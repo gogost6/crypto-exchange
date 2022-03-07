@@ -8,9 +8,50 @@
         flex-direction: row;
         justify-content: space-between;
         border-bottom: 0.5px solid rgb(209, 209, 209);
+
+        p,
+        h4 {
+            flex-basis: 18%;
+            text-align: right;
+        }
     }
 
     .symbol-container.small {
         font-size: 11px;
+    }
+
+    .pagination {
+        list-style-type: none;
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+
+        li {
+            cursor: pointer;
+            display: flex;
+            align-content: center;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgb(209, 209, 209);
+            height: 39px;
+            border-radius: 50%;
+            text-align: center;
+            flex-basis: 6%;
+
+            a {
+                width: 100%;
+                height: 63%;
+            }
+        }
+
+        li.selected {
+            background: #fffb00;
+        }
+
+        .previous,
+        .next {
+            flex-basis: 13%;
+            border-radius: 3px;
+        }
     }
 }

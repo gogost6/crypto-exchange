@@ -1,14 +1,22 @@
 import "./SearchBar.scss";
 import Table from './Table/Table.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
-import { getLiveTickerPriceBinance, get24HrPriceChange } from '../services/binance.js';
-import { useState } from "react";
+import { faMagnifyingGlass, faBomb } from '@fortawesome/free-solid-svg-icons';
+import { getLiveTickerPriceBinance, get24HrPriceChange, getAll24HrPriceChange } from '../services/binance.js';
+import { useEffect, useState } from "react";
 
 const SearchBar = () => {
     const [binancePair, setBinancePair] = useState({});
     const [binance24Hr, setBinance24Hr] = useState({});
-    const [notFoundPair, setNotFoundPair] = useState('');
+    const [binanceAll, setBinanceAll] = useState([]);
+    const [notFoundPair, setNotFoundPair] = useState(false);
+    
+    useEffect(() => {
+        getAll24HrPriceChange()
+            .then(res =>setBinanceAll(res))
+            .catch(err => setNotFoundPair(true))
+    }, []);
+
 
     const onSubmit = (e) => {
         e.preventDefault();
@@ -22,22 +30,20 @@ const SearchBar = () => {
 
         getLiveTickerPriceBinance(pair.toUpperCase())
             .then(res => {
-                console.log(res);
+                setNotFoundPair(false);
                 setBinancePair(res);
             })
             .catch(err => {
-                console.log(err);
-                setNotFoundPair('Pair is not available nor in Binance, nor in Huobi!');
+                setNotFoundPair(true);
             });
 
         get24HrPriceChange(pair.toUpperCase())
             .then(res => {
-                console.log(res);
+                setNotFoundPair(false);
                 setBinance24Hr(res);
             })
             .catch(err => {
-                console.log(err);
-                setNotFoundPair('Pair is not available nor in Binance, nor in Huobi!');
+                setNotFoundPair(true);
             });
     }
 
@@ -53,13 +59,15 @@ const SearchBar = () => {
                 />
                 <button type="submit"><FontAwesomeIcon icon={faMagnifyingGlass} /></button>
             </form>
-            {binancePair.price
-                ? <Table
-                    price={Number(binancePair.price)}
-                    symbol={binancePair.symbol} 
-                    priceChange={Number(binance24Hr.priceChangePercent)}
-                    volume={Number(binance24Hr.volume)}/>
-                : ''}
+            
+            {notFoundPair ? <FontAwesomeIcon icon={faBomb} /> : ''}
+
+            <Table
+                binanceAll={binanceAll}
+                price={Number(binancePair.price)}
+                symbol={binancePair.symbol}
+                priceChangePercent={Number(binance24Hr.priceChangePercent)}
+                volume={Number(binance24Hr.volume)} />
         </div>);
 
 };
