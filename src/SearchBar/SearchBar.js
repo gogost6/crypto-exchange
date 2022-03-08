@@ -1,21 +1,32 @@
 import "./SearchBar.scss";
 import Table from './Table/Table.js';
-import { useDispatch } from "react-redux";
-import { addPairs, addSearchedPair, add24Hr } from '../features/exchange/exchangeSlice.js';
+import { useDispatch, useSelector } from "react-redux";
+import { addPairs, addSearchedPair, add24Hr, clearSearched } from '../features/exchange/exchangeSlice.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass, faBomb } from '@fortawesome/free-solid-svg-icons';
 import { getLiveTickerPriceBinance, get24HrPriceChange, getAll24HrPriceChange } from '../services/binance.js';
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const SearchBar = () => {
     const dispatch = useDispatch();
     const [notFoundPair, setNotFoundPair] = useState(false);
+    const [emptySubmit, setEmptySubmit] = useState(false);
+    const loader = useRef(true);
 
     useEffect(() => {
         getAll24HrPriceChange()
-            .then(res => dispatch(addPairs(res)))
-            .catch(err => setNotFoundPair(true))
-    }, []);
+                .then(res => dispatch(addPairs(res)))
+                .catch(err => setNotFoundPair(true))
+            loader.current = false;
+        // setInterval(() => {
+        //     console.log('yes');
+        //     getAll24HrPriceChange()
+        //         .then(res => dispatch(addPairs(res)))
+        //         .catch(err => setNotFoundPair(true))
+        //     loader.current = false;
+        // }, 3000);
+        return () => clearInterval()
+    }, [emptySubmit]);
 
 
     const onSubmit = (e) => {
@@ -24,6 +35,14 @@ const SearchBar = () => {
         let data = Object.fromEntries(formData);
         let pair = data.pair;
 
+        if (pair === '') {
+            setEmptySubmit(true);
+            setNotFoundPair(false);
+            dispatch(clearSearched());
+            return;
+        } else {
+            setEmptySubmit(false);
+        }
         if (pair.includes('/')) {
             pair = pair.replace('/', '');
         }
@@ -59,8 +78,11 @@ const SearchBar = () => {
                 />
                 <button type="submit"><FontAwesomeIcon icon={faMagnifyingGlass} /></button>
             </form>
-            {notFoundPair ? <FontAwesomeIcon icon={faBomb} /> : ''}
-            <Table />
+            {notFoundPair ? <>
+                <h2>Pair not found! Please try with another like SHIBB/USD.</h2>
+                <FontAwesomeIcon icon={faBomb} style={{ 'fontSize': '100px', 'marginBottom': '50px' }} />
+            </> : ''}
+            <Table loader={loader} />
         </div>);
 
 };

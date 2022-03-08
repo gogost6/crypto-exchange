@@ -1,16 +1,14 @@
 import "./Table.scss";
 import Items from "./Items";
-import { useDispatch, useSelector } from "react-redux";
-import { addPairs } from '../../features/exchange/exchangeSlice';
+import { useSelector } from "react-redux";
 import ReactPaginate from "react-paginate";
 import { useState, useEffect } from "react";
 import TableHeader from "./TableHeader";
 
-const Table = () => {
+const Table = ({loader}) => {
     const pairs = useSelector(state => state.exchange.value.binanceAll);
     const searchedPair = useSelector(state => state.exchange.value.searchedPair);
     const hours24Change = useSelector(state => state.exchange.value.searchedPair24Hr);
-
     const itemsPerPage = 5;
     const priceChangeStyle = hours24Change.priceChangePercent > 0 ? { color: 'green' } : { color: 'red' };
 
@@ -33,6 +31,11 @@ const Table = () => {
 
     return (<div className="table-container">
         <TableHeader pairs={pairs} items={items} setItems={setItems} />
+        {/* {loader.current ? <div className="loader-wrapper">
+            <div className="typing-demo">
+                Loading crypto pairs...
+            </div>
+        </div> : ''} */}
         {searchedPair.price ? <div className="symbol-container">
             <h4>{searchedPair.symbol}</h4>
             <p>{searchedPair.price}</p>

@@ -27,6 +27,10 @@ export const exchangeSlice = createSlice({
     add24Hr: (state, action) => {
       state.value.searchedPair24Hr = action.payload;
     },
+    clearSearched: (state, action) => {
+      state.value.searchedPair = {};
+      state.value.searchedPair24Hr = {};
+    },
     sortByName: (state, action) => {
       if (action.payload == 'asc') {
         state.value.binanceAll.sort((x, y) => {
@@ -98,6 +102,6 @@ export const exchangeSlice = createSlice({
   },
 })
 
-export const { addPairs, addSearchedPair, add24Hr, sortByName, sortByPrice, sortBy24hrPriceChangePercent, sortByVolume } = exchangeSlice.actions;
+export const { addPairs, addSearchedPair, add24Hr, clearSearched, sortByName, sortByPrice, sortBy24hrPriceChangePercent, sortByVolume } = exchangeSlice.actions;
 
 export default exchangeSlice.reducer;
