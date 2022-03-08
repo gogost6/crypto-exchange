@@ -18,6 +18,10 @@
 
     .symbol-container.small {
         font-size: 11px;
+
+        p {
+            cursor: pointer;
+        }
     }
 
     .pagination {

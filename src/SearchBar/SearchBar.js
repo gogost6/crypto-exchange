@@ -1,19 +1,19 @@
 import "./SearchBar.scss";
 import Table from './Table/Table.js';
+import { useDispatch } from "react-redux";
+import { addPairs, addSearchedPair, add24Hr } from '../features/exchange/exchangeSlice.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass, faBomb } from '@fortawesome/free-solid-svg-icons';
 import { getLiveTickerPriceBinance, get24HrPriceChange, getAll24HrPriceChange } from '../services/binance.js';
 import { useEffect, useState } from "react";
 
 const SearchBar = () => {
-    const [binancePair, setBinancePair] = useState({});
-    const [binance24Hr, setBinance24Hr] = useState({});
-    const [binanceAll, setBinanceAll] = useState([]);
+    const dispatch = useDispatch();
     const [notFoundPair, setNotFoundPair] = useState(false);
-    
+
     useEffect(() => {
         getAll24HrPriceChange()
-            .then(res =>setBinanceAll(res))
+            .then(res => dispatch(addPairs(res)))
             .catch(err => setNotFoundPair(true))
     }, []);
 
@@ -31,7 +31,7 @@ const SearchBar = () => {
         getLiveTickerPriceBinance(pair.toUpperCase())
             .then(res => {
                 setNotFoundPair(false);
-                setBinancePair(res);
+                dispatch(addSearchedPair(res));
             })
             .catch(err => {
                 setNotFoundPair(true);
@@ -40,7 +40,7 @@ const SearchBar = () => {
         get24HrPriceChange(pair.toUpperCase())
             .then(res => {
                 setNotFoundPair(false);
-                setBinance24Hr(res);
+                dispatch(add24Hr(res));
             })
             .catch(err => {
                 setNotFoundPair(true);
@@ -59,15 +59,8 @@ const SearchBar = () => {
                 />
                 <button type="submit"><FontAwesomeIcon icon={faMagnifyingGlass} /></button>
             </form>
-            
             {notFoundPair ? <FontAwesomeIcon icon={faBomb} /> : ''}
-
-            <Table
-                binanceAll={binanceAll}
-                price={Number(binancePair.price)}
-                symbol={binancePair.symbol}
-                priceChangePercent={Number(binance24Hr.priceChangePercent)}
-                volume={Number(binance24Hr.volume)} />
+            <Table />
         </div>);
 
 };
