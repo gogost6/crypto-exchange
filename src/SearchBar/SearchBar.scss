@@ -33,3 +33,22 @@ $main-color: rgb(206, 206, 30);
         margin-bottom: 30px;
     }
 }
+
+.hide {
+    animation-name: hideAnimation;
+    animation-duration: 1.5s;
+    animation-fill-mode: forwards;
+    animation-delay: 1s;
+}
+
+@keyframes hideAnimation {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+        height: 0;
+        margin: 0;
+    }
+}

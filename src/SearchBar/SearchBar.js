@@ -59,6 +59,7 @@ const SearchBar = () => {
 
     const onSubmit = (e) => {
         e.preventDefault();
+        setNotFoundPair(false);
         location.pathname = '/';
         
         let formData = new FormData(e.currentTarget);
@@ -89,8 +90,8 @@ const SearchBar = () => {
                 <button type="submit"><FontAwesomeIcon icon={faMagnifyingGlass} /></button>
             </form>
             {notFoundPair ? <>
-                <h2>Pair not found! Please try with another like SHIBB/USD.</h2>
-                <FontAwesomeIcon icon={faBomb} style={{ 'fontSize': '100px', 'marginBottom': '50px' }} />
+                <h2 className="hide">Pair not found! Please try with another like SHIBB/USD.</h2>
+                <FontAwesomeIcon className="hide" icon={faBomb} style={{ 'fontSize': '100px', 'marginBottom': '50px' }} />
             </> : ''}
             <Table loader={loader} />
         </div>);
