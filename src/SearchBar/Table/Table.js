@@ -44,7 +44,7 @@ const Table = ({loader}) => {
                     ? `+${hours24Change.priceChangePercent}`
                     : `${hours24Change.priceChangePercent}`}%
             </p>
-            <p>{hours24Change.volume}</p>
+            <p>{hours24Change.volume ? `${(Number(hours24Change.volume)).toFixed(2)}M` : ''}</p>
         </div>
             : <>
                 <Items currentItems={currentItems} />

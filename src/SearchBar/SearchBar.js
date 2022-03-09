@@ -6,40 +6,16 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass, faBomb } from '@fortawesome/free-solid-svg-icons';
 import { getLiveTickerPriceBinance, get24HrPriceChange, getAll24HrPriceChange } from '../services/binance.js';
 import { useEffect, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
 
 const SearchBar = () => {
     const dispatch = useDispatch();
+    const location = useLocation();
     const [notFoundPair, setNotFoundPair] = useState(false);
     const [emptySubmit, setEmptySubmit] = useState(false);
     const loader = useRef(true);
 
-    useEffect(() => {
-        getAll24HrPriceChange()
-            .then(res => dispatch(addPairs(res)))
-            .catch(err => setNotFoundPair(true))
-        setInterval(() => {
-            getAll24HrPriceChange()
-                .then(res => dispatch(addPairs(res)))
-                .catch(err => setNotFoundPair(true))
-        }, 30000);
-        return () => clearInterval()
-    }, [emptySubmit]);
-
-
-    const onSubmit = (e) => {
-        e.preventDefault();
-        let formData = new FormData(e.currentTarget);
-        let data = Object.fromEntries(formData);
-        let pair = data.pair;
-
-        if (pair === '') {
-            setEmptySubmit(true);
-            setNotFoundPair(false);
-            dispatch(clearSearched());
-            return;
-        } else {
-            setEmptySubmit(false);
-        }
+    function getData(pair) {
         if (pair.includes('/')) {
             pair = pair.replace('/', '');
         }
@@ -61,6 +37,43 @@ const SearchBar = () => {
             .catch(err => {
                 setNotFoundPair(true);
             });
+    }
+
+    useEffect(() => {
+        let newLocation = location.pathname;
+        if (newLocation != '/') {
+            return getData(newLocation);
+        }
+
+        getAll24HrPriceChange()
+            .then(res => dispatch(addPairs(res)))
+            .catch(err => setNotFoundPair(true))
+        setInterval(() => {
+            getAll24HrPriceChange()
+                .then(res => dispatch(addPairs(res)))
+                .catch(err => setNotFoundPair(true))
+        }, 30000);
+        return () => clearInterval()
+    }, [emptySubmit]);
+
+
+    const onSubmit = (e) => {
+        e.preventDefault();
+        location.pathname = '/';
+        
+        let formData = new FormData(e.currentTarget);
+        let data = Object.fromEntries(formData);
+        let pair = data.pair;
+
+        if (pair === '') {
+            setEmptySubmit(true);
+            setNotFoundPair(false);
+            dispatch(clearSearched());
+            return;
+        } else {
+            setEmptySubmit(false);
+        }
+        getData(pair);
     }
 
     return (
