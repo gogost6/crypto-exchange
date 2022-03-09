@@ -1,6 +1,6 @@
 import "./SearchBar.scss";
 import Table from './Table/Table.js';
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { addPairs, addSearchedPair, add24Hr, clearSearched } from '../features/exchange/exchangeSlice.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass, faBomb } from '@fortawesome/free-solid-svg-icons';
@@ -15,16 +15,13 @@ const SearchBar = () => {
 
     useEffect(() => {
         getAll24HrPriceChange()
+            .then(res => dispatch(addPairs(res)))
+            .catch(err => setNotFoundPair(true))
+        setInterval(() => {
+            getAll24HrPriceChange()
                 .then(res => dispatch(addPairs(res)))
                 .catch(err => setNotFoundPair(true))
-            loader.current = false;
-        // setInterval(() => {
-        //     console.log('yes');
-        //     getAll24HrPriceChange()
-        //         .then(res => dispatch(addPairs(res)))
-        //         .catch(err => setNotFoundPair(true))
-        //     loader.current = false;
-        // }, 3000);
+        }, 30000);
         return () => clearInterval()
     }, [emptySubmit]);
 

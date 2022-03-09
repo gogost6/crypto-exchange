@@ -32,14 +32,14 @@ export const exchangeSlice = createSlice({
       state.value.searchedPair24Hr = {};
     },
     sortByName: (state, action) => {
-      if (action.payload == 'asc') {
+      if (action.payload === 'asc') {
         state.value.binanceAll.sort((x, y) => {
           const a = x.symbol;
           const b = y.symbol
           return a.localeCompare(b);
         });
         state.value.sortType.name = 'desc';
-      } else if (action.payload == 'desc') {
+      } else if (action.payload === 'desc') {
         state.value.binanceAll.sort((x, y) => {
           const a = x.symbol;
           const b = y.symbol
@@ -49,14 +49,14 @@ export const exchangeSlice = createSlice({
       }
     },
     sortByPrice: (state, action) => {
-      if (action.payload == 'asc') {
+      if (action.payload === 'asc') {
         state.value.binanceAll.sort((x, y) => {
           const a = x.lastPrice;
           const b = y.lastPrice
           return a - b;
         });
         state.value.sortType.price = 'desc';
-      } else if (action.payload == 'desc') {
+      } else if (action.payload === 'desc') {
         state.value.binanceAll.sort((x, y) => {
           const a = x.lastPrice;
           const b = y.lastPrice;
@@ -66,14 +66,14 @@ export const exchangeSlice = createSlice({
       }
     },
     sortBy24hrPriceChangePercent: (state, action) => {
-      if (action.payload == 'asc') {
+      if (action.payload === 'asc') {
         state.value.binanceAll.sort((x, y) => {
           const a = x.priceChangePercent;
           const b = y.priceChangePercent;
           return a - b;
         });
         state.value.sortType['24hrPriceChangePercent'] = 'desc';
-      } else if (action.payload == 'desc') {
+      } else if (action.payload === 'desc') {
         state.value.binanceAll.sort((x, y) => {
           const a = x.priceChangePercent;
           const b = y.priceChangePercent;
@@ -83,14 +83,14 @@ export const exchangeSlice = createSlice({
       }
     },
     sortByVolume: (state, action) => {
-      if (action.payload == 'asc') {
+      if (action.payload === 'asc') {
         state.value.binanceAll.sort((x, y) => {
           const a = x.volume;
           const b = y.volume;
           return a - b;
         });
         state.value.sortType.volume = 'desc';
-      } else if (action.payload == 'desc') {
+      } else if (action.payload === 'desc') {
         state.value.binanceAll.sort((x, y) => {
           const a = x.volume;
           const b = y.volume;
