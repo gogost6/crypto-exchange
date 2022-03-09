@@ -1,6 +1,6 @@
 import "./SearchBar.scss";
 import Table from './Table/Table.js';
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addPairs, addSearchedPair, add24Hr, clearSearched, addHuobiPair } from '../features/exchange/exchangeSlice.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass, faBomb } from '@fortawesome/free-solid-svg-icons';
@@ -8,13 +8,23 @@ import { getLiveTickerPriceBinance, get24HrPriceChange, getAll24HrPriceChange } 
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { getLiveTickerPriceHuobi } from "../services/huobi";
+import ExchangeData from "../ExchangeData/ExchangeData";
 
 const SearchBar = () => {
     const dispatch = useDispatch();
     const location = useLocation();
-    const [notFoundPair, setNotFoundPair] = useState(false);
+    const [notFoundPairBinance, setNotFoundPairBinance] = useState(false);
+    const [notFoundPairHuobi, setNotFoundPairHuobi] = useState(false);
     const [emptySubmit, setEmptySubmit] = useState(false);
+    const searchedPairBinance = useSelector((state) => state.exchange.value.searchedPair);
+    const huobiPair = useSelector(state => state.exchange.value.huobiPair);
     const loader = useRef(true);
+    const inputLocation = location.pathname.slice(1, location.pathname.length)
+    const [inputLocationState, setInputLocationState] = useState(inputLocation);
+
+    const onChangeInput = (e) => {
+        setInputLocationState(e.target.value);
+    }
 
     function getData(pair) {
         if (pair.includes('/')) {
@@ -23,30 +33,33 @@ const SearchBar = () => {
 
         getLiveTickerPriceBinance(pair.toUpperCase())
             .then(res => {
-                setNotFoundPair(false);
+                setNotFoundPairBinance(false);
                 dispatch(addSearchedPair(res));
             })
             .catch(err => {
-                setNotFoundPair(true);
+                setNotFoundPairBinance(true);
             });
 
         get24HrPriceChange(pair.toUpperCase())
             .then(res => {
-                setNotFoundPair(false);
+                setNotFoundPairBinance(false);
                 dispatch(add24Hr(res));
             })
             .catch(err => {
-                setNotFoundPair(true);
+                setNotFoundPairBinance(true);
             });
 
         getLiveTickerPriceHuobi(pair.toLowerCase())
             .then(res => {
-                setNotFoundPair(false);
-                console.log(res);
-                dispatch(addHuobiPair({res, symbol: pair.toUpperCase()}));
+                if (res.status === 'error') {
+                    setNotFoundPairHuobi(true);
+                } else {
+                    setNotFoundPairHuobi(false);
+                    dispatch(addHuobiPair({ res, symbol: pair.toUpperCase() }));
+                }
             })
             .catch(err => {
-                setNotFoundPair(true);
+                setNotFoundPairHuobi(true);
             });
     }
 
@@ -58,11 +71,11 @@ const SearchBar = () => {
 
         getAll24HrPriceChange()
             .then(res => dispatch(addPairs(res)))
-            .catch(err => setNotFoundPair(true))
+            .catch(err => setNotFoundPairBinance(true))
         setInterval(() => {
             getAll24HrPriceChange()
                 .then(res => dispatch(addPairs(res)))
-                .catch(err => setNotFoundPair(true))
+                .catch(err => setNotFoundPairBinance(true))
         }, 30000);
         return () => clearInterval()
     }, [emptySubmit]);
@@ -70,8 +83,9 @@ const SearchBar = () => {
 
     const onSubmit = (e) => {
         e.preventDefault();
-        setNotFoundPair(false);
-        location.pathname = '/';
+        setNotFoundPairBinance(false);
+        setNotFoundPairHuobi(false);
+        dispatch(clearSearched());
 
         let formData = new FormData(e.currentTarget);
         let data = Object.fromEntries(formData);
@@ -79,7 +93,8 @@ const SearchBar = () => {
 
         if (pair === '') {
             setEmptySubmit(true);
-            setNotFoundPair(false);
+            setNotFoundPairBinance(false);
+            setNotFoundPairHuobi(false);
             dispatch(clearSearched());
             return;
         } else {
@@ -95,18 +110,19 @@ const SearchBar = () => {
                 <input
                     type="text"
                     id="header-search"
-                    placeholder="BTC/USD"
+                    placeholder="BTC/USDT"
                     name="pair"
+                    value={inputLocationState}
+                    onChange={onChangeInput}
                 />
                 <button type="submit"><FontAwesomeIcon icon={faMagnifyingGlass} /></button>
             </form>
-            {notFoundPair ? <>
-                <h2 className="hide">Pair not found! Please try with another like SHIBB/USD.</h2>
+            {(notFoundPairBinance && notFoundPairHuobi) ? <>
+                <h2 className="hide">Pair not found! Please try with another like BTC/USDT.</h2>
                 <FontAwesomeIcon className="hide" icon={faBomb} style={{ 'fontSize': '100px', 'marginBottom': '50px' }} />
             </> : ''}
-            <Table loader={loader} />
+            {searchedPairBinance.price || huobiPair.close ? <Table /> : <ExchangeData />}
         </div>);
-
 };
 
 export default SearchBar;

@@ -38,6 +38,7 @@ export const exchangeSlice = createSlice({
       state.value.searchedPair = {};
       state.value.searchedPair24Hr = {};
       state.value.huobiPair = {};
+      state.value.binanceAll = [];
     },
     sortByName: (state, action) => {
       if (action.payload === 'asc') {
