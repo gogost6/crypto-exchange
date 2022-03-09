@@ -1,12 +1,13 @@
 import "./SearchBar.scss";
 import Table from './Table/Table.js';
 import { useDispatch } from "react-redux";
-import { addPairs, addSearchedPair, add24Hr, clearSearched } from '../features/exchange/exchangeSlice.js';
+import { addPairs, addSearchedPair, add24Hr, clearSearched, addHuobiPair } from '../features/exchange/exchangeSlice.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass, faBomb } from '@fortawesome/free-solid-svg-icons';
 import { getLiveTickerPriceBinance, get24HrPriceChange, getAll24HrPriceChange } from '../services/binance.js';
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { getLiveTickerPriceHuobi } from "../services/huobi";
 
 const SearchBar = () => {
     const dispatch = useDispatch();
@@ -37,6 +38,16 @@ const SearchBar = () => {
             .catch(err => {
                 setNotFoundPair(true);
             });
+
+        getLiveTickerPriceHuobi(pair.toLowerCase())
+            .then(res => {
+                setNotFoundPair(false);
+                console.log(res);
+                dispatch(addHuobiPair({res, symbol: pair.toUpperCase()}));
+            })
+            .catch(err => {
+                setNotFoundPair(true);
+            });
     }
 
     useEffect(() => {
@@ -61,7 +72,7 @@ const SearchBar = () => {
         e.preventDefault();
         setNotFoundPair(false);
         location.pathname = '/';
-        
+
         let formData = new FormData(e.currentTarget);
         let data = Object.fromEntries(formData);
         let pair = data.pair;

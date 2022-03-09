@@ -60,6 +60,28 @@
     }
 }
 
+.binance-div,
+.huobi-div {
+    width: 16%;
+    height: 77px;
+    position: absolute;
+    left: 4%;
+
+    h3 {
+        text-align: center;
+        margin: 0;
+    }
+
+    img {
+        width: 100%;
+    }
+}
+
+.huobi-div {
+  top: 50%;
+}
+
+
 // loader from codepen !
 
 .loader-wrapper {
@@ -67,26 +89,26 @@
     display: flex;
     align-items: center;
     justify-content: center;
-  }
-  
-  .typing-demo {
+}
+
+.typing-demo {
     width: 23ch;
-    animation: typing 2s steps(22), blink .5s step-end infinite alternate;
+    animation: typing 2s steps(22), blink 0.5s step-end infinite alternate;
     white-space: nowrap;
     overflow: hidden;
     border-right: 3px solid;
     font-family: monospace;
     font-size: 2em;
-  }
-  
-  @keyframes typing {
+}
+
+@keyframes typing {
     from {
-      width: 0
+        width: 0;
     }
-  }
-      
-  @keyframes blink {
+}
+
+@keyframes blink {
     50% {
-      border-color: transparent
+        border-color: transparent;
     }
-  }
+}
