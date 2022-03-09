@@ -1,8 +1,8 @@
 import "./Table.scss";
 import { useSelector } from "react-redux";
 import TableHeader from "./TableHeader";
-import binanceLogo from '../../assets/binance-logo.jpg';
-import huobiLogo from '../../assets/huobi.jpg';
+import binanceLogo from '../../../assets/binance-logo.jpg';
+import huobiLogo from '../../../assets/huobi.jpg';
 
 const Table = ({ loader }) => {
     const searchedPair = useSelector(state => state.exchange.value.searchedPair);

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
 import { useSelector } from "react-redux";
 import Items from "../SearchBar/Table/Items";
-import binanceLogo from '../assets/binance-logo.jpg';
+import binanceLogo from '../../assets/binance-logo.jpg';
 import TableHeader from "../SearchBar/Table/TableHeader";
 
 const ExchangeData = () => {

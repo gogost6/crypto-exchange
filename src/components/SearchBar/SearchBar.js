@@ -1,18 +1,19 @@
 import "./SearchBar.scss";
 import Table from './Table/Table.js';
 import { useDispatch, useSelector } from "react-redux";
-import { addPairs, addSearchedPair, add24Hr, clearSearched, addHuobiPair } from '../features/exchange/exchangeSlice.js';
+import { addPairs, addSearchedPair, add24Hr, clearSearched, addHuobiPair } from '../../features/exchange/exchangeSlice.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMagnifyingGlass, faBomb } from '@fortawesome/free-solid-svg-icons';
-import { getLiveTickerPriceBinance, get24HrPriceChange, getAll24HrPriceChange } from '../services/binance.js';
+import { faMagnifyingGlass, faBomb, faHouse } from '@fortawesome/free-solid-svg-icons';
+import { getLiveTickerPriceBinance, get24HrPriceChange, getAll24HrPriceChange } from '../../services/binance.js';
 import { useEffect, useRef, useState } from "react";
-import { useLocation } from "react-router-dom";
-import { getLiveTickerPriceHuobi } from "../services/huobi";
+import { useLocation, useNavigate } from "react-router-dom";
+import { getLiveTickerPriceHuobi } from "../../services/huobi";
 import ExchangeData from "../ExchangeData/ExchangeData";
 
 const SearchBar = () => {
     const dispatch = useDispatch();
     const location = useLocation();
+    const navigate = useNavigate();
     const [notFoundPairBinance, setNotFoundPairBinance] = useState(false);
     const [notFoundPairHuobi, setNotFoundPairHuobi] = useState(false);
     const [emptySubmit, setEmptySubmit] = useState(false);
@@ -77,9 +78,15 @@ const SearchBar = () => {
                 .then(res => dispatch(addPairs(res)))
                 .catch(err => setNotFoundPairBinance(true))
         }, 30000);
+        //if the time is 3s, they ban my IP adress after a while
         return () => clearInterval()
-    }, [emptySubmit]);
+    }, [emptySubmit, location]);
 
+    const onClickHouse = () => {
+        navigate('/');
+        setInputLocationState('');
+        dispatch(clearSearched());
+    }
 
     const onSubmit = (e) => {
         e.preventDefault();
@@ -116,6 +123,7 @@ const SearchBar = () => {
                     onChange={onChangeInput}
                 />
                 <button type="submit"><FontAwesomeIcon icon={faMagnifyingGlass} /></button>
+                <FontAwesomeIcon className="house" icon={faHouse} onClick={onClickHouse}/>
             </form>
             {(notFoundPairBinance && notFoundPairHuobi) ? <>
                 <h2 className="hide">Pair not found! Please try with another like BTC/USDT.</h2>

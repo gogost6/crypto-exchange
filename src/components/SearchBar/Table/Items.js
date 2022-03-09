@@ -3,7 +3,7 @@ const Items = ({ currentItems }) => {
         currentItems ? <>
             {currentItems.map(x => <div className="symbol-container" key={x.symbol}>
                 <h4>{x.symbol}</h4>
-                <p>{x.lastPrice}</p>
+                <p>{Number(x.lastPrice).toFixed(2)}</p>
                 <p
                     style={x.priceChangePercent > 0
                         ? { color: 'green' }
