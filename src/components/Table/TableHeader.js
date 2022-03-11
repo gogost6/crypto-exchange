@@ -2,7 +2,7 @@ import "./Table.scss";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSort, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
 import { useDispatch, useSelector } from "react-redux";
-import { sortByName, sortByPrice, sortBy24hrPriceChangePercent, sortByVolume } from '../../../features/exchange/exchangeSlice';
+import { sortByName, sortByPrice, sortBy24hrPriceChangePercent, sortByVolume } from '../../features/exchange/exchangeSlice';
 
 const TableHeader = () => {
     const sortType = useSelector(state => state.exchange.value.sortType);

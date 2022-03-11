@@ -1,10 +1,10 @@
-import "../SearchBar/Table/Table.scss";
+import "../Table/Table.scss";
 import { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
 import { useSelector } from "react-redux";
-import Items from "../SearchBar/Table/Items";
+import Items from "./Items";
 import binanceLogo from '../../assets/binance-logo.jpg';
-import TableHeader from "../SearchBar/Table/TableHeader";
+import TableHeader from "../Table/TableHeader";
 
 const ExchangeData = () => {
     const pairs = useSelector(state => state.exchange.value.binanceAll);

@@ -1,11 +1,11 @@
 import "./SearchBar.scss";
-import Table from './Table/Table.js';
+import Table from '../Table/Table.js';
 import { useDispatch, useSelector } from "react-redux";
 import { addPairs, addSearchedPair, add24Hr, clearSearched, addHuobiPair } from '../../features/exchange/exchangeSlice.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass, faBomb, faHouse } from '@fortawesome/free-solid-svg-icons';
 import { getLiveTickerPriceBinance, get24HrPriceChange, getAll24HrPriceChange } from '../../services/binance.js';
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getLiveTickerPriceHuobi } from "../../services/huobi";
 import ExchangeData from "../ExchangeData/ExchangeData";
@@ -27,7 +27,7 @@ const SearchBar = () => {
         setInputLocationState(e.target.value);
     }
 
-    function getData(pair) {
+    const getData = useCallback((pair) => {
         if (pair.includes('/')) {
             pair = pair.replace('/', '');
         }
@@ -62,7 +62,7 @@ const SearchBar = () => {
             .catch(err => {
                 setNotFoundPairHuobi(true);
             });
-    }
+    });
 
     useEffect(() => {
         let newLocation = location.pathname;
@@ -72,7 +72,8 @@ const SearchBar = () => {
 
         getAll24HrPriceChange()
             .then(res => dispatch(addPairs(res)))
-            .catch(err => setNotFoundPairBinance(true))
+            .catch(err => setNotFoundPairBinance(true));
+
         setInterval(() => {
             getAll24HrPriceChange()
                 .then(res => dispatch(addPairs(res)))
@@ -123,7 +124,7 @@ const SearchBar = () => {
                     onChange={onChangeInput}
                 />
                 <button type="submit"><FontAwesomeIcon icon={faMagnifyingGlass} /></button>
-                <FontAwesomeIcon className="house" icon={faHouse} onClick={onClickHouse}/>
+                <FontAwesomeIcon className="house" icon={faHouse} onClick={onClickHouse} />
             </form>
             {(notFoundPairBinance && notFoundPairHuobi) ? <>
                 <h2 className="hide">Pair not found! Please try with another like BTC/USDT.</h2>
