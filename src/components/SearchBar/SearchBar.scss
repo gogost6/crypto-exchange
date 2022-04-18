@@ -1,0 +1,60 @@
+$main-color: rgb(206, 206, 30);
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    input {
+        border: 1.5px solid rgba(236, 236, 236, 0.877);
+        border-radius: 7px;
+        height: 40px;
+        width: 250px;
+    }
+
+    input:hover {
+        border: 1.5px solid $main-color;
+    }
+
+    input:focus {
+        outline: none;
+        border: 1.5px solid $main-color;
+    }
+
+    button {
+        margin-left: 5px;
+        height: 40px;
+        width: 40px;
+        border-radius: 50%;
+        border: 1px solid rgba(236, 236, 236, 0.178);
+    }
+
+    form {
+        margin-bottom: 30px;
+    }
+
+    .house {
+        margin-left: 8px;
+        font-size: 23px;
+        cursor: pointer;
+    }
+}
+
+.hide {
+    animation-name: hideAnimation;
+    animation-duration: 1.5s;
+    animation-fill-mode: forwards;
+    animation-delay: 4s;
+}
+
+@keyframes hideAnimation {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+        height: 0;
+        margin: 0;
+    }
+}
