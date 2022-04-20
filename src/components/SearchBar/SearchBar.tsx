@@ -35,7 +35,6 @@ const SearchBar = () => {
         (state) => state.exchange.value.searchedPair
     );
     const huobiPair = useAppSelector((state) => state.exchange.value.huobiPair);
-    const loader = useRef(true);
     const inputLocation = location.pathname.slice(1, location.pathname.length);
     const [inputLocationState, setInputLocationState] = useState(inputLocation);
 
@@ -43,7 +42,25 @@ const SearchBar = () => {
         setInputLocationState(e.target.value);
     };
 
+    const ErrorComponent = () => {
+        if (!notFoundPairHuobi || !notFoundPairBinance) {
+            return (
+                <>
+                    {searchedPairBinance.price || huobiPair.close ? (
+                        <Table />
+                    ) : (
+                        <ExchangeData />
+                    )}
+                </>
+            );
+        } else {
+            return null;
+        }
+    };
+
     const getData = useCallback((pair: string) => {
+        console.log("not here");
+
         if (pair.includes("/")) {
             pair = pair.replace("/", "");
         }
@@ -103,6 +120,13 @@ const SearchBar = () => {
         navigate("/");
         setInputLocationState("");
         dispatch(clearSearched());
+
+        getAll24HrPriceChange()
+            .then((res) => dispatch(addPairs(res)))
+            .catch((err) => setNotFoundPairBinance(true));
+
+        setNotFoundPairBinance(false);
+        setNotFoundPairHuobi(false);
     };
 
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -162,11 +186,7 @@ const SearchBar = () => {
             ) : (
                 ""
             )}
-            {searchedPairBinance.price || huobiPair.close ? (
-                <Table />
-            ) : (
-                <ExchangeData />
-            )}
+            <ErrorComponent />
         </div>
     );
 };
