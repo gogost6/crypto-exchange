@@ -1,5 +1,6 @@
 import "./SearchBar.scss";
 import Table from "../Table/Table";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
     addPairs,
@@ -19,7 +20,7 @@ import {
     get24HrPriceChange,
     getAll24HrPriceChange,
 } from "../../services/binance";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getLiveTickerPriceHuobi } from "../../services/huobi";
 import ExchangeData from "../ExchangeData/ExchangeData";
@@ -164,11 +165,11 @@ const SearchBar = () => {
                     onChange={onChangeInput}
                 />
                 <button type="submit">
-                    <FontAwesomeIcon icon={faMagnifyingGlass} />
+                    <FontAwesomeIcon icon={faMagnifyingGlass as IconProp} />
                 </button>
                 <FontAwesomeIcon
                     className="house"
-                    icon={faHouse}
+                    icon={faHouse as IconProp}
                     onClick={onClickHouse}
                 />
             </form>
@@ -179,7 +180,7 @@ const SearchBar = () => {
                     </h2>
                     <FontAwesomeIcon
                         className="hide"
-                        icon={faBomb}
+                        icon={faBomb as IconProp}
                         style={{ fontSize: "100px", marginBottom: "50px" }}
                     />
                 </>

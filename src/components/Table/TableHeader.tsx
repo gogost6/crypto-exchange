@@ -1,5 +1,6 @@
 import "./Table.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import {
     faSort,
     faSortUp,
@@ -19,11 +20,11 @@ const TableHeader = () => {
 
     const fontIcon = (sortType: string) => {
         if (sortType === "asc") {
-            return <FontAwesomeIcon icon={faSortDown} />;
+            return <FontAwesomeIcon icon={faSortDown as IconProp} />;
         } else if (sortType === "desc") {
-            return <FontAwesomeIcon icon={faSortUp} />;
+            return <FontAwesomeIcon icon={faSortUp as IconProp} />;
         } else {
-            return <FontAwesomeIcon icon={faSort} />;
+            return <FontAwesomeIcon icon={faSort as IconProp} />;
         }
     };
 
