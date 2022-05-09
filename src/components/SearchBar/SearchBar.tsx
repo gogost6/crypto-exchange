@@ -1,7 +1,6 @@
 import "./SearchBar.scss";
-import Table from "../Table/Table";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { useAppDispatch } from "../../app/hooks";
 import {
     addPairs,
     addSearchedPair,
@@ -20,10 +19,11 @@ import {
     get24HrPriceChange,
     getAll24HrPriceChange,
 } from "../../services/binance";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, Suspense } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getLiveTickerPriceHuobi } from "../../services/huobi";
-import ExchangeData from "../ExchangeData/ExchangeData";
+
+import Preview from "../Preview/Preview";
 
 const SearchBar = () => {
     const dispatch = useAppDispatch();
@@ -32,31 +32,11 @@ const SearchBar = () => {
     const [notFoundPairBinance, setNotFoundPairBinance] = useState(false);
     const [notFoundPairHuobi, setNotFoundPairHuobi] = useState(false);
     const [emptySubmit, setEmptySubmit] = useState(false);
-    const searchedPairBinance = useAppSelector(
-        (state) => state.exchange.value.searchedPair
-    );
-    const huobiPair = useAppSelector((state) => state.exchange.value.huobiPair);
     const inputLocation = location.pathname.slice(1, location.pathname.length);
     const [inputLocationState, setInputLocationState] = useState(inputLocation);
 
     const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         setInputLocationState(e.target.value);
-    };
-
-    const ErrorComponent = () => {
-        if (!notFoundPairHuobi || !notFoundPairBinance) {
-            return (
-                <>
-                    {searchedPairBinance.price || huobiPair.close ? (
-                        <Table />
-                    ) : (
-                        <ExchangeData />
-                    )}
-                </>
-            );
-        } else {
-            return null;
-        }
     };
 
     const getData = useCallback((pair: string) => {
@@ -187,7 +167,10 @@ const SearchBar = () => {
             ) : (
                 ""
             )}
-            <ErrorComponent />
+            <Preview
+                notFoundPairBinance={notFoundPairBinance}
+                notFoundPairHuobi={notFoundPairHuobi}
+            />
         </div>
     );
 };
