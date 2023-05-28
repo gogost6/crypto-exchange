@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 # Host link: https://crypto-exchange-miy80f4wt-gogost6.vercel.app/
 
 # Documentation
@@ -13,7 +11,6 @@ You are in the right place!
   <li>React with Redux</li>
 </ul>
 
->>>>>>> 7a66119eca0712d0c41f7d43ab521480769dab32
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
